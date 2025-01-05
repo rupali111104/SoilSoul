@@ -18,7 +18,7 @@ app.use(cors());
 app.use(bodyParser.json());
 
 // Oracle Database Connection Configuration
-async function initializeDB() {
+async function connectToDB() {
   try {
     const dbURI = process.env.ORACLE_DB_URI;
     await oracledb.createPool({
@@ -33,7 +33,7 @@ async function initializeDB() {
   }
 }
 
-initializeDB();
+connectToDB();
 
 // Configure multer for file uploads
 const storage = multer.diskStorage({

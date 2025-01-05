@@ -20,6 +20,7 @@ app.use(bodyParser.json());
 // Oracle Database Connection Configuration
 async function initializeDB() {
   try {
+    const dbURI = process.env.ORACLE_DB_URI;
     await oracledb.createPool({
       user: "system", // Oracle database username
       password: "rupa", // Oracle database password
@@ -387,5 +388,6 @@ app.get("/getUser", async (req, res) => {
 });
 
 // Start server
-app.listen(5000, () => console.log("Server running on http://localhost:5000"));
-
+app.listen(process.env.PORT, () => {
+  console.log(`Server Started at port ${process.env.PORT}`);
+});

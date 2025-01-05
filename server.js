@@ -18,19 +18,24 @@ app.use(cors());
 app.use(bodyParser.json());
 
 // Oracle Database Connection Configuration
+// Read environment variables
+const dbUser = process.env.DB_USER;
+const dbPassword = process.env.DB_PASSWORD;
+const dbConnectionString = process.env.DB_CONNECTION_STRING;
+
+// Function to connect to the Oracle database
 async function connectToDB() {
-  try {
-    const dbURI = process.env.ORACLE_DB_URI;
-    await oracledb.createPool({
-      user: "system", // Oracle database username
-      password: "rupa", // Oracle database password
-      connectString: "localhost/XE", // Replace with your TNS alias or connection string
-    });
-    console.log("Connected to database");
-  } catch (err) {
-    console.error("Error connecting to database:", err);
-    process.exit(1); // Exit if the database connection fails
-  }
+    try {
+        const connection = await oracledb.getConnection({
+            user: dbUser,
+            password: dbPassword,
+            connectString: dbConnectionString
+        });
+
+        console.log('Connected to Oracle Database');
+    } catch (err) {
+        console.error('Database connection error', err);
+    }
 }
 
 connectToDB();

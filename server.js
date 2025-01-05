@@ -18,27 +18,25 @@ app.use(cors());
 app.use(bodyParser.json());
 
 // Oracle Database Connection Configuration
-// Read environment variables
-const dbUser = process.env.DB_USER;
-const dbPassword = process.env.DB_PASSWORD;
-const dbConnectionString = process.env.DB_CONNECTION_STRING;
+require('dotenv').config(); // Load environment variables
 
-// Function to connect to the Oracle database
-async function connectToDB() {
-    try {
-        const connection = await oracledb.getConnection({
-            user: dbUser,
-            password: dbPassword,
-            connectString: dbConnectionString
-        });
+const oracledb = require('oracledb');
 
-        console.log('Connected to Oracle Database');
-    } catch (err) {
-        console.error('Database connection error', err);
-    }
+async function initializeDB() {
+  try {
+    await oracledb.createPool({
+      user: process.env.ORACLE_DB_USER,
+      password: process.env.ORACLE_DB_PASSWORD,
+      connectString: process.env.ORACLE_DB_URI, // Use URI from environment
+    });
+    console.log("Connected to database");
+  } catch (err) {
+    console.error("Error connecting to database:", err);
+    process.exit(1); // Exit if the database connection fails
+  }
 }
 
-connectToDB();
+initializeDB();
 
 // Configure multer for file uploads
 const storage = multer.diskStorage({

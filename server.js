@@ -18,24 +18,23 @@ app.use(cors());
 app.use(bodyParser.json());
 
 // Oracle Database Connection Configuration
-require('dotenv').config(); // Load environment variables
-
-const oracledb = require('oracledb');
-
 async function initializeDB() {
   try {
+    // Create a connection pool using environment variables
     await oracledb.createPool({
-      user: process.env.ORACLE_DB_USER,
-      password: process.env.ORACLE_DB_PASSWORD,
-      connectString: process.env.ORACLE_DB_URI, // Use URI from environment
+      user: process.env.DB_USER,             // Oracle database username
+      password: process.env.DB_PASSWORD,     // Oracle database password
+      connectString: process.env.DB_CONNECTION_STRING, // Oracle TNS alias or connection string
     });
-    console.log("Connected to database");
+
+    console.log("Connected to the database");
   } catch (err) {
     console.error("Error connecting to database:", err);
     process.exit(1); // Exit if the database connection fails
   }
 }
 
+// Initialize the database
 initializeDB();
 
 // Configure multer for file uploads
